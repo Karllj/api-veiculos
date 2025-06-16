@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cadastro de Veículos</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f3f4f6;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      background-color: white;
+      box-shadow: 0 0 12px rgba(0,0,0,0.1);
+      border-radius: 8px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    .form-group {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .form-group input {
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      flex: 1;
+      min-width: 150px;
+    }
+
+    button {
+      background-color: #1d4ed8;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.2s ease-in-out;
+    }
+
+    button:hover {
+      background-color: #2563eb;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      background-color: #e5e7eb;
+      margin-bottom: 10px;
+      padding: 12px 20px;
+      border-radius: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .info {
+      font-size: 16px;
+      color: #111827;
+    }
+
+    .delete-btn {
+      background-color: #ef4444;
+      padding: 6px 12px;
+      border: none;
+      border-radius: 4px;
+      color: white;
+      cursor: pointer;
+      margin-left: 8px;
+    }
+
+    .delete-btn:hover {
+      background-color: #dc2626;
+    }
+
+    .edit-btn {
+      background-color: #2563eb;
+      padding: 6px 12px;
+      border: none;
+      border-radius: 4px;
+      color: white;
+      cursor: pointer;
+      margin-left: 8px;
+    }
+
+    .edit-btn:hover {
+      background-color: #1d4ed8;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Cadastro de Veículos</h1>
+    <div class="form-group">
+      <input id="modelo" placeholder="Modelo" />
+      <input id="marca" placeholder="Marca" />
+      <input id="ano" type="number" placeholder="Ano" />
+      <button onclick="criar()">Cadastrar</button>
+    </div>
+    <ul id="lista"></ul>
+  </div>
+
+  <script>
+    let editandoId = null;
+
+    async function listar() {
+      const res = await fetch("/veiculos");
+      const veiculos = await res.json();
+      const ul = document.getElementById("lista");
+      ul.innerHTML = "";
+
+      veiculos.forEach(v => {
+        ul.innerHTML += `
+          <li>
+            <span class="info">
+              <strong>ID:</strong> ${v.id} |
+              <strong>Modelo:</strong> ${v.modelo} |
+              <strong>Marca:</strong> ${v.marca} |
+              <strong>Ano:</strong> ${v.ano}
+            </span>
+            <button class="edit-btn" onclick="editar(${v.id})">Editar</button>
+            <button class="delete-btn" onclick="deletar(${v.id})">Excluir</button>
+          </li>
+        `;
+      });
+    }
+
+    async function criar() {
+      const modelo = document.getElementById("modelo").value.trim();
+      const marca = document.getElementById("marca").value.trim();
+      const ano = parseInt(document.getElementById("ano").value);
+
+      if (!modelo || !marca || !ano) {
+        alert("Preencha todos os campos corretamente.");
+        return;
+      }
+
+      if (editandoId) {
+        // Atualizar veículo
+        await fetch(`/veiculos/${editandoId}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ modelo, marca, ano }),
+        });
+        editandoId = null;
+        document.querySelector("button[onclick='criar()']").textContent = "Cadastrar";
+      } else {
+        // Criar novo veículo
+        await fetch("/veiculos", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ modelo, marca, ano }),
+        });
+      }
+
+      limparFormulario();
+      listar();
+    }
+
+    function limparFormulario() {
+      document.getElementById("modelo").value = "";
+      document.getElementById("marca").value = "";
+      document.getElementById("ano").value = "";
+    }
+
+    async function editar(id) {
+      const res = await fetch(`/veiculos`);
+      const veiculos = await res.json();
+      const veiculo = veiculos.find(v => v.id === id);
+
+      if (!veiculo) {
+        alert("Veículo não encontrado");
+        return;
+      }
+
+      document.getElementById("modelo").value = veiculo.modelo;
+      document.getElementById("marca").value = veiculo.marca;
+      document.getElementById("ano").value = veiculo.ano;
+
+      editandoId = id;
+      document.querySelector("button[onclick='criar()']").textContent = "Salvar";
+    }
+
+    async function deletar(id) {
+      if (confirm("Deseja realmente excluir este veículo?")) {
+        await fetch(`/veiculos/${id}`, { method: "DELETE" });
+        listar();
+      }
+    }
+
+    listar();
+  </script>
+</body>
+</html>
