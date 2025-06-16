@@ -4,7 +4,7 @@ Projeto CRUD para gerenciar veículos, construído com FastAPI e SQLite. Permite
 
 ---
 
-## ✨ Funcionalidades
+## Funcionalidades
 
 * **Adicionar Veículo**: Cadastro de veículos com modelo, marca e ano.
 * **Listar Veículos**: Visualização de todos os veículos cadastrados, mostrando ID e dados.
@@ -15,7 +15,7 @@ Projeto CRUD para gerenciar veículos, construído com FastAPI e SQLite. Permite
 
 ---
 
-## 🚀 Tecnologias Utilizadas
+## Tecnologias Utilizadas
 
 * **Python 3.10+**
 * **FastAPI** – Framework para criação da API REST.
@@ -26,7 +26,7 @@ Projeto CRUD para gerenciar veículos, construído com FastAPI e SQLite. Permite
 
 ---
 
-## ✅ Pré-requisitos
+## Pré-requisitos
 
 * Python 3.10 ou superior instalado: [python.org](https://www.python.org/)
 * pip atualizado para instalar dependências
@@ -34,7 +34,7 @@ Projeto CRUD para gerenciar veículos, construído com FastAPI e SQLite. Permite
 
 ---
 
-## ⚙️ Como Rodar o Projeto
+## Como Rodar o Projeto
 
 1. Clone o repositório e acesse a pasta:
 
@@ -67,7 +67,7 @@ Projeto CRUD para gerenciar veículos, construído com FastAPI e SQLite. Permite
 
 ---
 
-## 🧪 Como Usar
+## Como Usar
 
 ### A) Via Interface Web (HTML + JavaScript)
 
@@ -132,7 +132,7 @@ Projeto CRUD para gerenciar veículos, construído com FastAPI e SQLite. Permite
 
 ---
 
-## 📁 Estrutura do Projeto
+## Estrutura do Projeto
 
 ```
 api-veiculos/
@@ -148,7 +148,7 @@ api-veiculos/
 
 ---
 
-## 📝 Observações
+## Observações
 
 * O front-end usa fetch API para comunicação com a API FastAPI.
 * A aplicação segue padrões REST, com endpoints organizados e verbos HTTP apropriados.
